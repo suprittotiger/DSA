@@ -1,0 +1,34 @@
+---Find the repeating and missing number---
+ class Solution {
+    public int[] findMissingAndRepeatedValues(int[][] grid) {
+        int n = grid.length;
+        int N = n * n;
+
+        long gridSum = 0;
+        long gridSqSum = 0;
+
+        // Calculate sums
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                gridSum += grid[i][j];
+                gridSqSum += (long) grid[i][j] * grid[i][j];
+            }
+        }
+
+        // Expected sums
+        long Sum = (long) N * (N + 1) / 2;
+        long SqSum = (long) N * (N + 1) * (2L * N + 1) / 6;// (2L * N + 1) / 6; to avoid the overflow in java
+
+
+        // Differences
+        long SumDiff = gridSum - Sum;   // x - y
+        long SqDiff = gridSqSum - SqSum; // x² - y²
+
+        // Solve equations
+        long sumXY = SqDiff / SumDiff;   // x + y because it’s the bridge that converts the difference-of-squares into a usable x + y, which we need to solve for the actual repeated and missing values.
+        long repeated = (SumDiff + sumXY) / 2;
+        long missing = repeated - SumDiff;
+
+        return new int[]{(int) repeated, (int) missing};
+    }
+}
